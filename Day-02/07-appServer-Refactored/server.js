@@ -1,4 +1,5 @@
-var http = require('http');
+var http = require('http'),
+	path = require('path');
 	
 
 var dataParser = require('./dataParser'),
@@ -10,7 +11,7 @@ var dataParser = require('./dataParser'),
 
 app.use(dataParser);
 app.use(logger);
-app.use(serveStatic);
+app.use(serveStatic(path.join(__dirname, 'public')));
 app.use(calculatorHandler);
 app.use(resourceNotFoundHandler);
 

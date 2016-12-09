@@ -3,29 +3,14 @@ var querystring = require('querystring'),
 
 module.exports = function(req, res, next){
 	var resourceName = req.urlObj.pathname;
-	if (resourceName === '/calculator' && req.method === 'GET'){
-		var queryData = querystring.parse(req.urlObj.query);
-		var op = queryData.op,
-			n1 = parseInt(queryData.n1, 10),
-			n2 = parseInt(queryData.n2, 10);
+	if (resourceName === '/calculator'){
+		var data = req.method === 'POST' ? req.body : req.query;
+		var op = data.op,
+			n1 = parseInt(data.n1, 10),
+			n2 = parseInt(data.n2, 10);
 		var result = calculator[op](n1, n2);
 		res.write(result.toString());
-		res.end();
-	} else if (resourceName === '/calculator' && req.method === 'POST'){
-		var inputData = '';
-		req.on('data', function(chunk){
-			inputData += chunk;
-		});
-		req.on('end', function(){
-			var bodyData = querystring.parse(inputData);
-			var op = bodyData.op,
-				n1 = parseInt(bodyData.n1, 10),
-				n2 = parseInt(bodyData.n2, 10);
-			var result = calculator[op](n1, n2);
-			res.write(result.toString());
-			res.end();
-		})
-		
+		res.end();	
 	} else {
 		next();
 	}
