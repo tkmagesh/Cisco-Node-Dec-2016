@@ -23,7 +23,13 @@ module.exports = function(req, res){
 				return;
 			}
 			var stream = fs.createReadStream(resourcePath);
-			stream.pipe(res);
+			stream.on('data', function(chunk){
+				console.log('[@serveStating] serving file chunk');
+				res.write(chunk);
+			});
+			stream.on('end', function(){
+				res.end();
+			})
 		});
 	}
 }
